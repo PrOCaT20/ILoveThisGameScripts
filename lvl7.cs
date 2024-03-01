@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class lvl7 : MonoBehaviour
 {
-    private const bool allowCarrierDataNetwork = false;
-    private const string pingAddress = "8.8.8.8";
+    private const bool allowCarrierDataNetwork = false; 
+    private const string pingAddress = "8.8.8.8"; // adreça de www.google.com
     private const float waitingTime = 2.0f;
-    public Animator anim;
-    bool f1, f2, f3, f4, f5; 
+    public Animator anim; // component per obrir porta/ignora
 
     private Ping ping;
     private float pingStartTime;
@@ -60,28 +59,11 @@ public class lvl7 : MonoBehaviour
             if (stopCheck)
                 ping = null;
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3)) f1 = true;
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            f2 = true;
-            if (f3)
-            {
-                f4 = true;
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) f3 = true;
-        if (Input.GetKeyDown(KeyCode.Alpha6)) f5 = true;
-
-        if (f1 && f2 && f3 && f4 && f5)
-        {
-            anim.SetBool("Close", true);
-        }
     }
 
     private void InternetIsNotAvailable()
     {
-        anim.SetBool("Close", true);
+        anim.SetBool("Close", true); // obrir porta en cas que no arriba a pinguejar www.google.com
         Debug.Log("Internet is not available!");
     }
 
