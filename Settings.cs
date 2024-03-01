@@ -9,7 +9,6 @@ public class Settings : MonoBehaviour
     private int actualResolutionIndex = 0;
     private Resolution[] possibleResolutions;
 
-
     public GameObject graphicsOptions, audioOptions, generalOptions;
     public Text optionText;
     private int optionIndex = 0;
@@ -19,7 +18,6 @@ public class Settings : MonoBehaviour
     private int languageIndex = 0;
     private string[] languageOptions = { "English", "Русский", "Català", "Українська", "Español" };
 
-
     public Slider musicSlider;
     public Slider soundSlider;
     public AudioSource MusicAudioSource, SoundAudioSource;
@@ -27,7 +25,7 @@ public class Settings : MonoBehaviour
     void Start()
     {
         options = new string[3];
-        StartCoroutine(Startt());
+        StartCoroutine(WaitForLocIsReady()); 
         musicSlider.value = PlayerPrefs.GetFloat("MusicValue");
         soundSlider.value = PlayerPrefs.GetFloat("SoundValue");
         MusicAudioSource.volume = PlayerPrefs.GetFloat("MusicValue");
@@ -40,13 +38,13 @@ public class Settings : MonoBehaviour
             new Resolution { width = 1600, height = 900 }
         };
 
-        CanviarResolucio(0);
+        ChangeResolution(0);
     }
-    IEnumerator Startt()
+    IEnumerator WaitForLocIsReady() // metode: avans d'utilitzar el LocalizationManager, espera que estigui actiu i preparat per funcionar
     {
         yield return StartCoroutine(LocalizationManager.Instance.Start());
         options[0] = LocalizationManager.Instance.GetTextForKey("settingsGeneral");
-        options[1] = LocalizationManager.Instance.GetTextForKey("settingsGraphics");
+        options[1] = LocalizationManager.Instance.GetTextForKey("settingsGraphics");  //atribuïm text dels diferents temes d'ajustament quan LocManager esta isReady
         options[2] = LocalizationManager.Instance.GetTextForKey("settingsAudio");
         UpdateOptionText();
     }
@@ -59,7 +57,7 @@ public class Settings : MonoBehaviour
         audioOptions.SetActive(optionIndex == 2);
     }
 
-    public void ClickRightArrow()
+    public void ClickRightArrow() // management de les fletxes per mirar opcions
     {
         optionIndex = (optionIndex + 1) % options.Length;
         UpdateOptionText();
@@ -83,7 +81,7 @@ public class Settings : MonoBehaviour
         languageText.text = languageOptions[languageIndex];
     }
 
-    public void ApplyLanguage()
+    public void ApplyLanguage() // boto per aplicar el llenguatge escollit depenent del index de la opcio possible
     {
         switch (languageIndex)
         {
@@ -97,7 +95,7 @@ public class Settings : MonoBehaviour
         SceneManager.LoadScene("Menu");
     }
 
-    public void CanviarResolucio(int increment)
+    public void ChangeResolution(int increment)  // boto per aplicar la resolucio de la pantalla
     {
         actualResolutionIndex += increment;
 
@@ -115,13 +113,13 @@ public class Settings : MonoBehaviour
         ResolutionText.text = possibleResolutions[actualResolutionIndex].width + "x" + possibleResolutions[actualResolutionIndex].height;
     }
 
-    public void ChangeMusicVolume()
+    public void ChangeMusicVolume()  // quan el value del slider de musica es canvia, ajusta el "volume" de la musica amb el value del slider && Guarda el value a la memoria (PlayerPrefs.SetX)
     {
         PlayerPrefs.SetFloat("MusicValue", musicSlider.value);
         MusicAudioSource.volume = musicSlider.value;
     }
 
-    public void ChangeSoundVolume()
+    public void ChangeSoundVolume() // quan el value del slider del so es canvia, ajusta el "volume" del so amb el value del slider && Guarda el value a la memoria (PlayerPrefs.SetX)
     {
         PlayerPrefs.SetFloat("SoundValue", soundSlider.value);
         SoundAudioSource.volume = soundSlider.value;
